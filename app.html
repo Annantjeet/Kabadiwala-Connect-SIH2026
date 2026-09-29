@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#27ae60">
+  
+  <title>Kabadiwala Connect</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #e5ddd5; padding: 15px; margin: 0; }
+    .app-container { max-width: 430px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-height: 88vh; display: flex; flex-direction: column; position: relative; }
+    h2 { text-align: center; color: #2c3e50; margin-top: 0; }
+    label { font-size: 13px; font-weight: bold; color: #555; display: block; margin-top: 10px; }
+    
+    input[type="text"], input[type="password"], input[type="number"], input[type="tel"], input[type="date"], select { width: 100%; padding: 11px; margin: 6px 0 14px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; background: #fff; }
+    
+    button { width: 100%; background: #27ae60; color: white; border: none; padding: 14px; font-size: 16px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
+    button.secondary { background: #34495e; }
+    button.whatsapp { background: #25D366; }
+    button.assistant { background: #8e44ad; }
+    button.profile { background: #f39c12; }
+    button.bhav-btn { background: #2980b9; }
+    button.safety-btn { background: #d35400; }
+    button.cancel-btn { background: #e74c3c; color: white; padding: 6px 12px; font-size: 12px; border: none; border-radius: 4px; cursor: pointer; width: auto; margin-top: 5px;}
+    button.bhuiyan-btn { background: #2980b9; color: white; padding: 8px; font-size: 13px; margin-top: -5px; margin-bottom: 10px; border-radius: 4px;}
+    button.gatepass-btn { background: #16a085; color: white; padding: 10px; font-size: 14px; border-radius: 6px; margin-top: 10px;}
+    button.voice-btn { background: #9b59b6; color: white; padding: 12px; font-size: 14px; border-radius: 6px; margin-bottom: 15px;}
+    button.gps-btn { background: #e67e22; color: white; padding: 10px; font-size: 13px; margin-bottom: 5px; border-radius: 6px;}
+    button.audio-btn { background: #8e44ad; padding: 8px; font-size: 13px; margin: 8px 0; border-radius: 6px; width: 100%; }
+    
+    .hidden { display: none !important; }
+    .back-btn { background: none; color: #e74c3c; padding: 0; margin-bottom: 15px; text-align: left; font-size: 14px; width: auto; font-weight: normal; }
+    
+    .lang-toggle { background: #3498db; width: auto; padding: 6px 14px; font-size: 13px; margin: 0; border-radius: 20px; float: right; }
+    .top-bar { display: flex; justify-content: flex-end; margin-bottom: 10px; }
+
+    #chatWindow { flex-grow: 1; background: #e5ddd5; border-radius: 8px; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; height: 380px; margin-bottom: 10px; }
+    .msg { max-width: 75%; padding: 10px 14px; border-radius: 15px; font-size: 14px; line-height: 1.4; }
+    .msg.bot { background: white; align-self: flex-start; border-bottom-left-radius: 2px; }
+    .msg.user { background: #dcf8c6; align-self: flex-end; border-bottom-right-radius: 2px; }
+    .chat-input-area { display: flex; gap: 8px; }
+    .chat-input-area input[type="text"] { flex-grow: 1; padding: 12px; border: 1px solid #ccc; border-radius: 20px; font-size: 14px; outline: none; margin: 0; }
+    .chat-input-area button { width: auto; padding: 10px 20px; margin: 0; border-radius: 20px; }
+    
+    .card { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-size: 14px;}
+    .status-badge { color: white; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; display: inline-block; }
+    .slot-picker { background: #eef2f7; padding: 10px; border-radius: 6px; margin: 10px 0; border: 1px solid #d1d8e0; }
+    .action-row { display: flex; gap: 8px; margin-top: 10px; }
+    .btn-approve { flex: 2; background: #2980b9; color: white; border: none; padding: 10px; border-radius: 4px; font-weight: bold; }
+    .btn-reject { flex: 1; background: #e74c3c; color: white; border: none; padding: 10px; border-radius: 4px; font-weight: bold; }
+    
+    .profile-banner { background: #dff9fb; padding: 10px; border-radius: 6px; font-size: 13px; color: #130f40; margin-bottom: 15px; display: none; border: 1px solid #c7ecee;}
+    .holiday-warning { color: #c0392b; font-size: 12px; font-weight: bold; margin-top: -10px; margin-bottom: 10px; display: none; }
+    
+    .bhuiyan-verified { font-size: 12px; font-weight: bold; margin-bottom: 10px; display: none; padding: 6px; border-radius: 4px; }
+    .bhuiyan-verified.formal { background-color: #d4efdf; color: #27ae60; border: 1px solid #27ae60; }
+    .bhuiyan-verified.provisional { background-color: #fcf3cf; color: #d35400; border: 1px solid #f39c12; }
+    
+    .analytics-panel { display: flex; gap: 6px; margin-bottom: 15px; flex-wrap: wrap; }
+    .stat-box { flex: 1; min-width: 45%; background: #2c3e50; color: white; padding: 10px; border-radius: 6px; text-align: center; margin-bottom: 4px;}
+    .stat-box h4 { margin: 0 0 5px 0; font-size: 11px; opacity: 0.8; }
+    .stat-box span { font-size: 18px; font-weight: bold; }
+    .stat-box.payout { background: #27ae60; }
+
+    .fab-helpline { position: fixed; bottom: 20px; right: 20px; background-color: #c0392b; color: white; border: none; border-radius: 50px; width: 60px; height: 60px; font-size: 24px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); cursor: pointer; display: flex; justify-content: center; align-items: center; z-index: 1000; text-decoration: none; }
+    
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 2000; }
+    .modal-content { background: white; padding: 20px; border-radius: 12px; width: 90%; max-width: 360px; text-align: center; position: relative; max-height: 85vh; overflow-y: auto; }
+    .ticket-box { border: 2px dashed #7f8c8d; padding: 15px; margin: 15px 0; border-radius: 8px; text-align: left; background: #fdfefe; position: relative;}
+    .ticket-box p { margin: 5px 0; font-size: 14px; }
+    .load-warning { background: #e8f8f5; color: #16a085; padding: 10px; border-radius: 6px; font-size: 13px; font-weight: bold; margin-top: -10px; margin-bottom: 10px; display: none; border: 1px solid #1abc9c;}
+    .watermark { position: absolute; opacity: 0.08; font-size: 55px; transform: rotate(-30deg); top: 30%; left: 10%; pointer-events: none;}
+    .smart-badge { background: #d4efdf; color: #1e8449; font-size: 11px; padding: 3px 6px; border-radius: 4px; font-weight: bold; display: inline-block; margin-bottom: 5px; }
+    .privacy-mask { font-family: monospace; background: #eee; padding: 2px 4px; border-radius: 3px; letter-spacing: 1px;}
+    
+    .manager-filters { display: flex; gap: 5px; margin-bottom: 10px; flex-wrap: wrap; }
+    .manager-filters select, .manager-filters input { padding: 8px; font-size: 13px; font-weight: bold; background: #d4e6f1; border-color: #2980b9; flex: 1; min-width: 45%; box-sizing: border-box; }
+
+    .checkbox-group { border: 1px solid #ccc; border-radius: 6px; padding: 10px; background: #fff; margin: 6px 0 14px 0; }
+    .checkbox-row { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; font-size: 14px; color: #333; }
+    .checkbox-row label { display: flex; align-items: center; cursor: pointer; font-weight: normal; margin: 0; }
+    .checkbox-row input[type="checkbox"] { margin-right: 8px; width: auto; transform: scale(1.2); }
+    .weight-input { width: 80px !important; padding: 4px !important; margin: 0 !important; font-size: 13px !important; display: none; border: 1px solid #3498db; }
+    .total-weight-banner { background: #eef2f7; padding: 10px; border-radius: 6px; text-align: center; font-weight: bold; color: #2c3e50; margin-bottom: 14px; border: 1px solid #d1d8e0;}
+
+    .bhav-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; text-align: left; }
+    .bhav-table th, .bhav-table td { padding: 8px; border-bottom: 1px solid #eee; }
+    .bhav-table th { background: #f4f6f7; color: #333; }
+    .trend-up { color: #27ae60; font-weight: bold; }
+    .safety-card { background: #fdf2e9; border: 1px solid #f5cba7; border-radius: 8px; padding: 10px; margin-bottom: 10px; text-align: left; }
+    .safety-card h4 { margin: 0 0 5px 0; color: #b9770e; font-size: 14px; display: flex; align-items: center; gap: 6px; }
+    .safety-card p { margin: 0; font-size: 12px; color: #555; line-height: 1.4; }
+  </style>
+</head>
+<body>
+
+  <a href="tel:1800112233" class="fab-helpline" title="Helpline">📞</a>
+
+  <div class="app-container">
+    <div class="top-bar">
+      <button type="button" class="lang-toggle" onclick="toggleLanguage()" id="langBtn">🌐 मराठी</button>
+    </div>
+    
+    <div id="roleScreen" style="display: flex; flex-direction: column; justify-content: center; flex-grow: 1;">
+      <h2 data-i18n="title">Kabadiwala Connect</h2>
+      <p style="text-align:center; color:#666; font-size:14px; margin-bottom:25px;" data-i18n="subtitle">Formalizing the Informal Recycling Chain</p>
+      <button type="button" onclick="showScreen('farmerAuthScreen')" data-i18n="btnRoleFarmer">♻️ I am a Collector</button>
+      <button type="button" class="secondary" onclick="showScreen('loginScreen')" data-i18n="btnRoleManager">🏢 Yard Manager</button>
+    </div>
+
+    <div id="farmerAuthScreen" class="hidden" style="flex-grow: 1; flex-direction: column; justify-content: center;">
+      <button type="button" class="back-btn" onclick="showScreen('roleScreen')" data-i18n="backBtn">← Back</button>
+      <h2 data-i18n="farmerLoginTitle">Collector Login</h2>
+      <label data-i18n="lblphoneAuth">Mobile Number</label>
+      <input type="tel" id="authPhone" placeholder="9876543210">
+      <button type="button" id="btnGetOtp" onclick="sendOtp()" data-i18n="btnGetOtp">Get OTP</button>
+      <div id="otpSection" class="hidden">
+        <label data-i18n="lblOtp">Enter 4-Digit OTP</label>
+        <input type="number" id="authOtp" placeholder="1234">
+        <button type="button" onclick="verifyOtp()" data-i18n="btnVerifyOtp">Verify & Login</button>
+      </div>
+    </div>
+
+    <div id="farmerMenuScreen" class="hidden" style="flex-grow: 1; flex-direction: column; justify-content: center;">
+      <button type="button" class="back-btn" onclick="showScreen('roleScreen')" data-i18n="logoutBtn">← Logout</button>
+      <h2 data-i18n="menuTitle">Collector Services</h2>
+      <div id="welcomeBack" class="profile-banner"></div>
+      <button type="button" class="profile" onclick="loadFarmerProfile()" data-i18n="btnProfile">👤 My Pass History</button>
+      <button type="button" onclick="showScreen('farmerScreen')" data-i18n="btnForm">📝 Book Drop-Off Slot</button>
+      <button type="button" class="bhav-btn" onclick="openBhavBoard()" data-i18n="btnBhavBoard">📈 Check Live Scrap Rates</button>
+      <button type="button" class="safety-btn" onclick="openSafetyModal()" data-i18n="btnSafety">⚠️ Safety & Hazard Guidance</button>
+      <button type="button" class="assistant" onclick="startChat()" data-i18n="btnChat">💬 Talk to Web Assistant</button>
+      <button type="button" class="whatsapp" onclick="openWhatsApp()" data-i18n="btnWa">📱 Book via WhatsApp</button>
+    </div>
+
+    <div id="farmerProfileScreen" class="hidden">
+      <button type="button" class="back-btn" onclick="showScreen('farmerMenuScreen')" data-i18n="backBtn2">← Back</button>
+      <h2 data-i18n="profileTitle">My Drop-Off History</h2>
+      
+      <!-- NEW: Collector History Status Filter -->
+      <select id="collectorStatusFilter" onchange="renderCollectorHistory()" style="margin-bottom: 15px; font-weight: bold; background: #eef2f7; border-color: #b0c4de;">
+        <option value="All" data-i18n="optAllStatus">All Statuses</option>
+        <option value="Pending" data-i18n="optPendingStatus">Pending Approvals</option>
+        <option value="Approved" data-i18n="optApprovedStatus">Approved</option>
+        <option value="Rejected">Rejected</option>
+        <option value="Cancelled">Cancelled</option>
+      </select>
+      
+      <div id="farmerHistoryData">Loading...</div>
+    </div>
+
+    <div id="loginScreen" class="hidden">
+      <button type="button" class="back-btn" onclick="showScreen('roleScreen')" data-i18n="backBtn">← Back</button>
+      <h2 data-i18n="adminTitle">Manager Access</h2>
+      <label data-i18n="lbluser">Username</label>
+      <input type="text" id="adminUsername" placeholder="admin">
+      <label data-i18n="lblpass">Password</label>
+      <input type="password" id="adminPassword" placeholder="admin123">
+      <button type="button" id="btnLogin" onclick="verifyLogin()" data-i18n="loginBtn">Secure Login</button>
+    </div>
+
+    <div id="adminScreen" class="hidden">
+      <button type="button" class="back-btn" onclick="showScreen('roleScreen')" data-i18n="logoutBtn">← Logout</button>
+      <h2 data-i18n="queueTitle">Recycling Yard Queue</h2>
+      
+      <div class="manager-filters">
+        <input type="date" id="managerDateFilter" onchange="renderManagerData()">
+        
+        <select id="managerCenterFilter" onchange="renderManagerData()">
+          <option value="All" data-i18n="fltAllCerts">All Yards</option>
+          <option value="Bilaspur Scrap Yard">Bilaspur Scrap Yard</option>
+          <option value="Raipur Scrap Yard">Raipur Scrap Yard</option>
+          <option value="Bhilai Scrap Yard">Bhilai Scrap Yard</option>
+          <option value="Korba Scrap Yard">Korba Scrap Yard</option>
+        </select>
+        
+        <select id="managerStatusFilter" onchange="renderManagerData()">
+          <option value="Pending" data-i18n="optPendingStatus">Pending Approvals</option>
+          <option value="Approved" data-i18n="optApprovedStatus">Already Approved</option>
+          <option value="All" data-i18n="optAllStatus">All Statuses</option>
+        </select>
+      </div>
+
+      <div class="analytics-panel">
+        <div class="stat-box">
+          <h4 data-i18n="statPending">Pending Trucks</h4>
+          <span id="statPendingCount">0</span>
+        </div>
+        <div class="stat-box">
+          <h4 data-i18n="statApproved">Approved Trucks</h4>
+          <span id="statApprovedCount">0</span>
+        </div>
+        <div class="stat-box">
+          <h4 data-i18n="statTotalQtl">Total Weight (Kg)</h4>
+          <span id="statTotalQtlCount">0</span>
+        </div>
+        <div class="stat-box payout">
+          <h4 data-i18n="statPayout">Total Payout (₹)</h4>
+          <span id="statPayoutCount">0</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 8px; margin-bottom: 15px;">
+        <button type="button" onclick="loadData()" class="secondary" style="flex: 1; padding: 9px; font-size: 13px; margin: 0;" data-i18n="refreshBtn">Refresh</button>
+        <button type="button" onclick="exportCSV()" style="flex: 1; background: #27ae60; padding: 9px; font-size: 13px; margin: 0;" data-i18n="exportBtn">📥 Export CSV</button>
+      </div>
+      
+      <div id="dashboardData">Loading...</div>
+    </div>
+
+    <!-- COLLECTOR DROP-OFF FORM -->
+    <div id="farmerScreen" class="hidden">
+      <button type="button" class="back-btn" onclick="showScreen('farmerMenuScreen')" data-i18n="backBtn2">← Back</button>
+      <h2 data-i18n="formTitle">Request Drop-Off</h2>
+      
+      <button type="button" id="voiceBtn" class="voice-btn" onclick="startVoiceRecognition()" data-i18n="btnVoice">🎙️ Speak to Auto-Fill (Voice AI)</button>
+
+      <label data-i18n="lblphone">Mobile Number</label>
+      <input type="tel" id="phone" placeholder="9876543210" disabled style="background:#eef2f7;">
+      
+      <label data-i18n="lblrakba">Collector ID (e-Shram 12-digit or Aadhaar last 4)</label>
+      <input type="number" id="rakba" placeholder="12 or 4 digits" oninput="resetBhuiyan()">
+      <button type="button" class="bhuiyan-btn" id="btnBhuiyan" onclick="simulateBhuiyanAPI()" data-i18n="btnVerifyBhuiyan">🔍 Verify Credentials</button>
+      <div id="bhuiyanVerified" class="bhuiyan-verified"></div>
+
+      <label data-i18n="lblname">Collector Name</label>
+      <input type="text" id="name" placeholder="Full name">
+      
+      <label data-i18n="lblkhasra">Vehicle Registration No.</label>
+      <input type="text" id="khasra" placeholder="CG10AB1234" onblur="cleanVehicleInput()">
+
+      <label data-i18n="lbldate">Preferred Delivery Date</label>
+      <input type="date" id="prefDate" onchange="checkHoliday('prefDate', 'formHolidayWarning')">
+      <div id="formHolidayWarning" class="holiday-warning"></div>
+
+      <label data-i18n="lblcenter">Select Recycling Yard</label>
+      <button type="button" class="gps-btn" onclick="findBestMandi()" id="btnBestMandi" data-i18n="btnBestMandi">📍 Find Fastest Yard via GPS</button>
+      <select id="center">
+        <option value="" disabled selected>-- Select Yard --</option>
+        <option value="Bilaspur Scrap Yard">Bilaspur Scrap Yard</option>
+        <option value="Raipur Scrap Yard">Raipur Scrap Yard</option>
+        <option value="Bhilai Scrap Yard">Bhilai Scrap Yard</option>
+        <option value="Korba Scrap Yard">Korba Scrap Yard</option>
+      </select>
+      <div id="loadWarning" class="load-warning"></div>
+
+      <label data-i18n="lblcrop">Scrap Breakdown (Select & Enter Weight)</label>
+      <div class="checkbox-group" id="scrapCheckboxes">
+        <div class="checkbox-row">
+          <label><input type="checkbox" value="PCBs" data-inputid="w_pcb" onchange="toggleWeightInput(this)"> <span data-i18n="optPcb">PCBs (₹250/kg)</span></label>
+          <input type="number" id="w_pcb" class="weight-input" placeholder="Kg" oninput="calculateTotalWeight()">
+        </div>
+        <div class="checkbox-row">
+          <label><input type="checkbox" value="Lithium Batteries" data-inputid="w_battery" onchange="toggleWeightInput(this)"> <span data-i18n="optBattery">Li-Ion Batteries (₹120/kg)</span></label>
+          <input type="number" id="w_battery" class="weight-input" placeholder="Kg" oninput="calculateTotalWeight()">
+        </div>
+        <div class="checkbox-row">
+          <label><input type="checkbox" value="Copper Cables" data-inputid="w_cable" onchange="toggleWeightInput(this)"> <span data-i18n="optCable">Copper Cables (₹180/kg)</span></label>
+          <input type="number" id="w_cable" class="weight-input" placeholder="Kg" oninput="calculateTotalWeight()">
+        </div>
+        <div class="checkbox-row">
+          <label><input type="checkbox" value="Display Units" data-inputid="w_display" onchange="toggleWeightInput(this)"> <span data-i18n="optDisplay">Displays (₹30/kg)</span></label>
+          <input type="number" id="w_display" class="weight-input" placeholder="Kg" oninput="calculateTotalWeight()">
+        </div>
+        <div class="checkbox-row">
+          <label><input type="checkbox" value="E-Plastics" data-inputid="w_plastic" onchange="toggleWeightInput(this)"> <span data-i18n="optPlastic">E-Plastics (₹15/kg)</span></label>
+          <input type="number" id="w_plastic" class="weight-input" placeholder="Kg" oninput="calculateTotalWeight()">
+        </div>
+        <div class="checkbox-row">
+          <label><input type="checkbox" value="Ferrous Metal" data-inputid="w_metal" onchange="toggleWeightInput(this)"> <span data-i18n="optMetal">Ferrous Metal (₹30/kg)</span></label>
+          <input type="number" id="w_metal" class="weight-input" placeholder="Kg" oninput="calculateTotalWeight()">
+        </div>
+        <div class="checkbox-row">
+          <label><input type="checkbox" value="Paper" data-inputid="w_paper" onchange="toggleWeightInput(this)"> <span data-i18n="optPaper">Paper (₹10/kg)</span></label>
+          <input type="number" id="w_paper" class="weight-input" placeholder="Kg" oninput="calculateTotalWeight()">
+        </div>
+        <div class="checkbox-row">
+          <label><input type="checkbox" value="Glass" data-inputid="w_glass" onchange="toggleWeightInput(this)"> <span data-i18n="optGlass">Glass (₹5/kg)</span></label>
+          <input type="number" id="w_glass" class="weight-input" placeholder="Kg" oninput="calculateTotalWeight()">
+        </div>
+      </div>
+
+      <div class="total-weight-banner">
+        <span data-i18n="lblTotalCalc">Total Consignment Weight:</span> <span id="totalWeightDisplay">0</span> Kg | 
+        <span data-i18n="lblEstPayout">Est. Payout:</span> <span style="color:#27ae60;">₹<span id="totalPayoutDisplay">0</span></span>
+      </div>
+      <input type="hidden" id="weight" value="0">
+
+      <label data-i18n="lblprefslot">Preferred Time Slot</label>
+      <select id="prefSlot">
+        <option value="Morning" data-i18n="optMorn">Morning (09:00 AM - 12:00 PM)</option>
+        <option value="Afternoon" data-i18n="optAft">Afternoon (12:00 PM - 05:00 PM)</option>
+      </select>
+      
+      <button type="button" id="submitBtn" onclick="submitData()" data-i18n="btnSubmit" style="margin-top: 15px;">Submit Drop-Off Request</button>
+    </div>
+
+    <!-- WEB ASSISTANT SCREEN -->
+    <div id="chatScreen" class="hidden" style="flex-grow: 1; flex-direction: column;">
+      <button type="button" class="back-btn" onclick="showScreen('farmerMenuScreen')" data-i18n="endChatBtn">← End Chat</button>
+      <div id="chatWindow"></div>
+      <div class="chat-input-area">
+        <input type="text" id="chatInput" placeholder="Type here..." onkeypress="handleEnter(event)">
+        <button type="button" id="chatSendBtn" onclick="processUserReply()" data-i18n="sendBtn">Send</button>
+      </div>
+    </div>
+
+    <!-- MODAL 1: GATE PASS MODAL -->
+    <div id="gatePassModal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <div class="watermark">CONNECT</div>
+        <h3 style="margin-top:0; color:#27ae60;" data-i18n="modalTitle">🎫 Digital Entry Pass</h3>
+        <div class="ticket-box">
+           <p><strong>Token ID:</strong> <span id="gpToken" style="color:#2980b9; font-weight:bold;"></span></p>
+           <p><strong>Drop-Off Bay:</strong> <span id="gpBridge" style="color:#e67e22; font-weight:bold;"></span></p>
+           <hr style="border: 1px dashed #ccc; margin: 10px 0;">
+           <p><strong>Name:</strong> <span id="gpName"></span></p>
+           <p><strong>Yard:</strong> <span id="gpCenter"></span></p>
+           <p><strong>Breakdown:</strong> <br><span id="gpCrop" style="font-size: 13px; color:#555;"></span></p>
+           <p><strong>Total Weight:</strong> <span id="gpWeight"></span> Kg</p>
+           <p><strong>Est. Payout:</strong> <span id="gpPayout" style="color:#27ae60; font-weight:bold; font-size:16px;"></span></p>
+           <p><strong>Assigned:</strong> <strong style="color:#c0392b;" id="gpSlot"></strong></p>
+           <p><strong>Date:</strong> <strong style="color:#c0392b;" id="gpDateVal"></strong></p>
+           
+           <div id="gatePassStatus" style="text-align: center; margin-top: 15px; font-weight: bold; color: #7f8c8d; font-size:12px;">
+             🔒 IN-TRANSIT (Awaiting GPS)
+           </div>
+           
+           <button id="geoBtn" onclick="verifyGeofence()" style="background:#3498db; width:100%; padding:8px; color:white; border:none; border-radius:4px; margin-top:10px; font-weight:bold;" data-i18n="geoBtn">📍 Unlock Fast-Lane (GPS)</button>
+           
+           <div id="qrFallback" class="hidden" style="text-align: center; margin-top: 10px;">
+             <div style="font-size: 40px; letter-spacing: -2px;">|||| ||||| |||| ||</div>
+             <div style="font-size: 10px; color: #7f8c8d;" data-i18n="lblQr">SCAN AT BAY ENTRANCE</div>
+           </div>
+        </div>
+        
+        <button onclick="shareToDriver()" style="background:#25D366; width:100%; padding:10px; margin-bottom:10px; color:white; border:none; border-radius:6px; font-weight:bold;" data-i18n="shareDriverBtn">📲 Share Pass to Driver</button>
+        <button onclick="document.getElementById('gatePassModal').classList.add('hidden')" style="background:#e74c3c; width:100%; padding:10px; color:white; border:none; border-radius:6px; font-weight:bold;" data-i18n="btnClose">Close</button>
+      </div>
+    </div>
+
+    <!-- MODAL 2: DAILY BHAV BOARD -->
+    <div id="bhavModal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <h3 style="margin-top:0; color:#2980b9;" data-i18n="bhavTitle">📈 Daily E-Waste Rates</h3>
+        <p style="font-size:12px; color:#666;" data-i18n="bhavSubtitle">Authorized Government & Recycler Benchmark Rates</p>
+        
+        <table class="bhav-table">
+          <thead>
+            <tr>
+              <th data-i18n="thMaterial">Material</th>
+              <th data-i18n="thRate">Rate/Kg</th>
+              <th data-i18n="thTrend">Trend</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td data-i18n="optPcb">Printed Circuit Boards</td><td>₹250</td><td class="trend-up">▲ +4%</td></tr>
+            <tr><td data-i18n="optBattery">Lithium-Ion Batteries</td><td>₹120</td><td class="trend-up">▲ +2%</td></tr>
+            <tr><td data-i18n="optCable">Copper Cables & Wire</td><td>₹180</td><td class="trend-up">▲ +1%</td></tr>
+            <tr><td data-i18n="optDisplay">Display Units</td><td>₹30</td><td>— Stable</td></tr>
+            <tr><td data-i18n="optPlastic">Mixed E-Plastics</td><td>₹15</td><td>— Stable</td></tr>
+            <tr><td data-i18n="optMetal">Ferrous Metal</td><td>₹30</td><td>— Stable</td></tr>
+            <tr><td data-i18n="optPaper">Paper</td><td>₹10</td><td>— Stable</td></tr>
+            <tr><td data-i18n="optGlass">Glass</td><td>₹5</td><td>— Stable</td></tr>
+          </tbody>
+        </table>
+        
+        <button type="button" class="audio-btn" onclick="speakBhav()" data-i18n="btnAudioRates">🔊 Listen to Rates (Audio)</button>
+        <button onclick="closeModalAudio('bhavModal')" style="background:#7f8c8d; width:100%; padding:10px; color:white; border:none; border-radius:6px; font-weight:bold; margin-top:5px;" data-i18n="btnClose">Close</button>
+      </div>
+    </div>
+
+    <!-- MODAL 3: PICTORIAL & AUDIO SAFETY GUIDANCE -->
+    <div id="safetyModal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <h3 style="margin-top:0; color:#d35400;" data-i18n="safetyTitle">⚠️ Hazard & Safety Guide</h3>
+        <p style="font-size:12px; color:#666;" data-i18n="safetySubtitle">Mandatory Safety Protocols under E-Waste Rules 2022</p>
+        
+        <div class="safety-card">
+          <h4>🚫 <span data-i18n="safe1Head">No Open Cable Burning</span></h4>
+          <p data-i18n="safe1Desc">Burning wires releases toxic dioxins and ruins copper purity. Handover intact cables to authorized yards.</p>
+        </div>
+        
+        <div class="safety-card">
+          <h4>🚫 <span data-i18n="safe2Head">No Acid Leaching of PCBs</span></h4>
+          <p data-i18n="safe2Desc">Extracting gold with acid causes toxic fumes and cyanide poisoning. Formal smelters extract 98% safely.</p>
+        </div>
+
+        <div class="safety-card">
+          <h4>⚠️ <span data-i18n="safe3Head">Safe Battery Handling</span></h4>
+          <p data-i18n="safe3Desc">Never puncture or crush lithium batteries. Store in a cool, dry bin away from direct sun to prevent fires.</p>
+        </div>
+
+        <button type="button" class="audio-btn" onclick="speakSafety()" data-i18n="btnAudioSafety">🔊 Read Safety Guidance (Audio)</button>
+        <button onclick="closeModalAudio('safetyModal')" style="background:#7f8c8d; width:100%; padding:10px; color:white; border:none; border-radius:6px; font-weight:bold; margin-top:5px;" data-i18n="btnClose">Close</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    var webAppUrl = "https://script.google.com/macros/s/AKfycbwwRQDh6CtI34HicliOTGpWfoUGFrmNVqfQ1UulRwW0wsTBRJQ-dmuUiX74BiHk0zAonQ/exec";
+    var SECRET_API_KEY = "AARAMBH_SECURE_KEY_2026"; 
+    
+    var globalManagerData = []; 
+    var globalFarmerData = [];
+    var holidays = { "2026-10-02": { en: "Gandhi Jayanti", hi: "गांधी जयंती", mr: "गांधी जयंती" }, "2026-11-08": { en: "Diwali", hi: "दीपावली", mr: "दिवाळी" }, "2026-12-25": { en: "Christmas", hi: "क्रिसमस", mr: "नाताळ" } };
+
+    var scrapRates = {
+        "PCB": 250, "circuit": 250, 
+        "Batter": 120, "Lithium": 120, 
+        "Cable": 180, "Wire": 180, 
+        "Display": 30, "Screen": 30, 
+        "Plastic": 15, 
+        "Ferrous": 30, "Metal": 30, 
+        "Paper": 10, 
+        "Glass": 5
+    };
+
+    function getEstimatedValue(rawString, totalWeightFallback) {
+      var val = 0;
+      var hasWeightsInString = /\d/.test(rawString);
+
+      if (!hasWeightsInString) {
+          var matchedRate = 0;
+          for(var k in scrapRates) {
+              if(String(rawString).toLowerCase().includes(k.toLowerCase())) {
+                  matchedRate = scrapRates[k]; break;
+              }
+          }
+          return matchedRate * (parseFloat(totalWeightFallback) || 0);
+      }
+
+      var parts = String(rawString).split(',');
+      parts.forEach(function(p) {
+          var matchedRate = 0;
+          for(var k in scrapRates) {
+              if(p.toLowerCase().includes(k.toLowerCase())) {
+                  matchedRate = scrapRates[k];
+                  break;
+              }
+          }
+          if(matchedRate > 0) {
+              var m = p.match(/(\d+)\s*kg/i) || p.match(/\((\d+)\)/i) || p.match(/(\d+)/);
+              if(m && m[1]) val += parseInt(m[1]) * matchedRate;
+          }
+      });
+      return val;
+    }
+
+    var currentLang = 'en';
+    var textDict = {
+      "en": {
+        "title": "Kabadiwala Connect", "subtitle": "Formalizing the Informal Recycling Chain",
+        "btnRoleFarmer": "♻️ I am a Collector", "btnRoleManager": "🏢 Yard Manager",
+        "farmerLoginTitle": "Collector Login", "lblphoneAuth": "Mobile Number", "btnGetOtp": "Get OTP", "lblOtp": "Enter 4-Digit OTP", "btnVerifyOtp": "Verify & Login",
+        "menuTitle": "Collector Services", "btnProfile": "👤 My Pass History", "profileTitle": "My Drop-Off History",
+        "btnForm": "📝 Book Drop-Off Slot", "btnChat": "💬 Talk to Web Assistant", "btnWa": "📱 Book via WhatsApp",
+        "btnAdmin": "Manager Login", "adminTitle": "Manager Access", "lbluser": "Username", "lblpass": "Password", "loginBtn": "Secure Login",
+        "queueTitle": "Recycling Yard Queue", "refreshBtn": "Refresh", "exportBtn": "📥 Export CSV", "backBtn": "← Back", "backBtn2": "← Back", "logoutBtn": "← Logout", "endChatBtn": "← End Chat",
+        "formTitle": "Request Drop-Off", "lblname": "Collector Name", "lblphone": "Mobile Number", "lblkhasra": "Vehicle Registration No.", "lblrakba": "Collector ID (e-Shram 12-digit or Aadhaar last 4)",
+        "btnVerifyBhuiyan": "🔍 Verify Credentials", "msgVerified": "✅ ID Verified",
+        "lblcenter": "Select Recycling Yard", "btnBestMandi": "📍 Find Fastest Yard via GPS",
+        "lblcrop": "Scrap Breakdown (Select & Enter Weight)", 
+        "lblTotalCalc": "Total Consignment Weight:",
+        "lbldate": "Preferred Delivery Date", "lblprefslot": "Preferred Time Slot", "optMorn": "Morning (09:00 AM - 12:00 PM)", "optAft": "Afternoon (12:00 PM - 05:00 PM)",
+        "btnSubmit": "Submit Drop-Off Request", "sendBtn": "Send", "alertFill": "Please fill all details.", "alertSubmitting": "Processing...", "alertSuccess": "Success!", "alertLogin": "Incorrect Username or Password!",
+        "modalTitle": "🎫 Digital Entry Pass", "btnViewGatePass": "🎫 View Entry Pass", "btnClose": "Close",
+        "btnVoice": "🎙️ Speak to Auto-Fill (Voice AI)", "geoBtn": "📍 Unlock Fast-Lane (GPS)", "shareDriverBtn": "📲 Share Pass to Driver", "lblQr": "SCAN AT BAY ENTRANCE", 
+        "fltAllCerts": "All Yards", "optPendingStatus": "Pending Approvals", "optApprovedStatus": "Already Approved", "optAllStatus": "All Statuses",
+        "statPending": "Pending Trucks", "statApproved": "Approved Trucks", "statTotalQtl": "Total Weight (Kg)", "statPayout": "Total Payout (₹)", "lblEstPayout": "Est. Payout:",
+        "btnBhavBoard": "📈 Daily Bhav Board (Rates)", "btnSafety": "⚠️ Worker Safety Guidelines",
+        "bhavTitle": "📈 Daily E-Waste Rates", "bhavSubtitle": "Authorized Government & Recycler Benchmark Rates",
+        "thMaterial": "Material", "thRate": "Rate/Kg", "thTrend": "Trend", "btnAudioRates": "🔊 Listen to Rates (Audio)",
+        "safetyTitle": "⚠️ Hazard & Safety Guide", "safetySubtitle": "Mandatory Safety Protocols under E-Waste Rules 2022",
+        "safe1Head": "No Open Cable Burning", "safe1Desc": "Burning wires releases toxic dioxins and ruins copper purity. Handover intact cables to authorized yards.",
+        "safe2Head": "No Acid Leaching of PCBs", "safe2Desc": "Extracting gold with acid causes toxic fumes and cyanide poisoning. Formal smelters extract 98% safely.",
+        "safe3Head": "Safe Battery Handling", "safe3Desc": "Never puncture or crush lithium batteries. Store in a cool, dry bin away from direct sun to prevent fires.",
+        "btnAudioSafety": "🔊 Read Safety Guidance (Audio)",
+        "optPcb": "PCBs / Circuit Boards", "optBattery": "Lithium-Ion Batteries", "optCable": "Copper Cables", "optDisplay": "Display Units (CRT/LCD)", "optPlastic": "Mixed E-Plastics",
+        "optMetal": "Ferrous Metal", "optPaper": "Paper", "optGlass": "Glass"
+      },
+      "hi": {
+        "title": "कबाड़ीवाला कनेक्ट", "subtitle": "अनौपचारिक पुनर्चक्रण श्रृंखला को औपचारिक बनाना",
+        "btnRoleFarmer": "♻️ मैं एक कलेक्टर हूँ", "btnRoleManager": "🏢 यार्ड प्रबंधक",
+        "farmerLoginTitle": "कलेक्टर लॉगिन", "lblphoneAuth": "मोबाइल नंबर", "btnGetOtp": "OTP प्राप्त करें", "lblOtp": "4-अंकीय OTP दर्ज करें", "btnVerifyOtp": "सत्यापित करें और लॉगिन करें",
+        "menuTitle": "कलेक्टर सेवाएँ", "btnProfile": "👤 मेरा पास इतिहास", "profileTitle": "मेरा ड्रॉप-ऑफ़ इतिहास",
+        "btnForm": "📝 ड्रॉप-ऑफ़ स्लॉट बुक करें", "btnChat": "💬 वेब असिस्टेंट से बात करें", "btnWa": "📱 व्हाट्सएप द्वारा बुक करें",
+        "btnAdmin": "प्रबंधक लॉगिन", "adminTitle": "प्रबंधक पहुँच", "lbluser": "यूज़रनेम", "lblpass": "पासवर्ड", "loginBtn": "सुरक्षित लॉगिन",
+        "queueTitle": "रिसाइकिलिंग यार्ड कतार", "refreshBtn": "ताज़ा करें", "exportBtn": "📥 एक्सेल डाउनलोड", "backBtn": "← वापस", "backBtn2": "← वापस", "logoutBtn": "← लॉग आउट", "endChatBtn": "← चैट समाप्त करें",
+        "formTitle": "ड्रॉप-ऑफ़ अनुरोध", "lblname": "कलेक्टर का नाम", "lblphone": "मोबाइल नंबर", "lblkhasra": "वाहन पंजीकरण संख्या", "lblrakba": "कलेक्टर आईडी (ई-श्रम 12-अंक या आधार अंतिम 4)",
+        "btnVerifyBhuiyan": "🔍 प्रमाण पत्र सत्यापित करें", "msgVerified": "✅ आईडी सत्यापित",
+        "lblcenter": "रिसाइकिलिंग यार्ड चुनें", "btnBestMandi": "📍 जीपीएस द्वारा सबसे तेज़ यार्ड खोजें",
+        "lblcrop": "ई-कचरा विवरण (चुनें और वजन दर्ज करें)", 
+        "lblTotalCalc": "कुल अनुमानित वजन:",
+        "lbldate": "पसंदीदा डिलीवरी तिथि", "lblprefslot": "पसंदीदा समय", "optMorn": "सुबह (09:00 AM - 12:00 PM)", "optAft": "दोपहर (12:00 PM - 05:00 PM)",
+        "btnSubmit": "अनुरोध भेजें", "sendBtn": "भेजें", "alertFill": "कृपया सभी विवरण भरें।", "alertSubmitting": "प्रक्रिया चल रही है...", "alertSuccess": "सफल!", "alertLogin": "गलत यूज़रनेम या पासवर्ड!",
+        "modalTitle": "🎫 डिजिटल एंट्री पास", "btnViewGatePass": "🎫 एंट्री पास देखें", "btnClose": "बंद करें",
+        "btnVoice": "🎙 बोलकर भरें (Voice AI)", "geoBtn": "📍 फास्ट-लेन अनलॉक करें (GPS)", "shareDriverBtn": "📲 ड्राइवर को पास भेजें", "lblQr": "बे प्रवेश पर स्कैन करें", 
+        "fltAllCerts": "सभी यार्ड", "optPendingStatus": "लंबित स्वीकृति", "optApprovedStatus": "पहले से स्वीकृत", "optAllStatus": "सभी स्थिति",
+        "statPending": "लंबित ट्रक", "statApproved": "स्वीकृत ट्रक", "statTotalQtl": "कुल वजन (किलो)", "statPayout": "कुल भुगतान (₹)", "lblEstPayout": "अनुमानित भुगतान:",
+        "btnBhavBoard": "📈 दैनिक भाव बोर्ड (दरें)", "btnSafety": "⚠️ कार्यकर्ता सुरक्षा नियम",
+        "bhavTitle": "📈 दैनिक ई-कचरा दरें", "bhavSubtitle": "अधिकृत सरकारी और रिसाइक्लर बेंचमार्क दरें",
+        "thMaterial": "सामग्री", "thRate": "दर/किलो", "thTrend": "रुझान", "btnAudioRates": "🔊 दरें सुनें (ऑडियो)",
+        "safetyTitle": "⚠️ खतरा और सुरक्षा गाइड", "safetySubtitle": "ई-कचरा नियम 2022 के तहत अनिवार्य सुरक्षा प्रोटोकॉल",
+        "safe1Head": "खुले में केबल न जलाएं", "safe1Desc": "तार जलाने से जहरीले डाइऑक्सिन निकलते हैं और तांबे की शुद्धता खराब होती है। साबुत केबल यार्ड में जमा करें।",
+        "safe2Head": "पीसीबी को एसिड में न धोएं", "safe2Desc": "एसिड से सोना निकालने से जहरीला धुआं निकलता है। अधिकृत रिसाइक्लर 98% सुरक्षित निष्कर्षण करते हैं।",
+        "safe3Head": "बैटरी को सुरक्षित रखें", "safe3Desc": "लिथियम बैटरी को कभी न तोड़ें या कुचलें। आग से बचने के लिए इसे धूप से दूर ठंडी, सूखी जगह रखें।",
+        "btnAudioSafety": "🔊 सुरक्षा निर्देश सुनें (ऑडियो)",
+        "optPcb": "पीसीबी / सर्किट बोर्ड", "optBattery": "लिथियम-आयन बैटरी", "optCable": "तांबे के तार", "optDisplay": "डिस्प्ले (सीआरटी/एलसीडी)", "optPlastic": "ई-प्लास्टिक",
+        "optMetal": "लोहा / धातु", "optPaper": "कागज", "optGlass": "कांच"
+      },
+      "mr": {
+        "title": "कबाडीवाला कनेक्ट", "subtitle": "अनौपचारिक पुनर्वापर साखळीचे औपचारिकीकरण",
+        "btnRoleFarmer": "♻️ मी एक संकलक आहे", "btnRoleManager": "🏢 यार्ड व्यवस्थापक",
+        "farmerLoginTitle": "संकलक लॉगिन", "lblphoneAuth": "मोबाईल नंबर", "btnGetOtp": "OTP मिळवा", "lblOtp": "४-अंकी OTP प्रविष्ट करा", "btnVerifyOtp": "सत्यापित करा आणि लॉगिन करा",
+        "menuTitle": "संकलक सेवा", "btnProfile": "👤 माझा पास इतिहास", "profileTitle": "माझा ड्रॉप-ऑफ इतिहास",
+        "btnForm": "📝 ड्रॉप-ऑफ स्लॉट बुक करा", "btnChat": "💬 वेब सहाय्यकाशी बोला", "btnWa": "📱 व्हॉट्सअ‍ॅपद्वारे बुक करा",
+        "btnAdmin": "व्यवस्थापक लॉगिन", "adminTitle": "व्यवस्थापक प्रवेश", "lbluser": "वापरकर्तानाव", "lblpass": "पासवर्ड", "loginBtn": "सुरक्षित लॉगिन",
+        "queueTitle": "पुनर्वापर यार्ड रांग", "refreshBtn": "ताजे करा", "exportBtn": "📥 एक्सेल डाउनलोड", "backBtn": "← मागे", "backBtn2": "← मागे", "logoutBtn": "← लॉग आउट", "endChatBtn": "← चॅट संपवा",
+        "formTitle": "ड्रॉप-ऑफ विनंती", "lblname": "संकलकाचे नाव", "lblphone": "मोबाईल नंबर", "lblkhasra": "वाहन नोंदणी क्रमांक", "lblrakba": "संकलक आयडी (ई-श्रम १२-अंकी किंवा आधार शेवटचे ४)",
+        "btnVerifyBhuiyan": "🔍 ओळखपत्र सत्यापित करा", "msgVerified": "✅ आयडी सत्यापित",
+        "lblcenter": "पुनर्वापर यार्ड निवडा", "btnBestMandi": "📍 जीपीएसद्वारे जलद यार्ड शोधा",
+        "lblcrop": "ई-कचरा तपशील (निवडा आणि वजन प्रविष्ट करा)", 
+        "lblTotalCalc": "एकूण अंदाजे वजन:",
+        "lbldate": "पसंतीची तारीख", "lblprefslot": "पसंतीची वेळ", "optMorn": "सकाळ (०९:०० AM - १२:०० PM)", "optAft": "दुपार (१२:०० PM - ०५:०० PM)",
+        "btnSubmit": "विनंती सबमिट करा", "sendBtn": "पाठवा", "alertFill": "कृपया सर्व माहिती भरा.", "alertSubmitting": "प्रक्रिया सुरू आहे...", "alertSuccess": "यशस्वी!", "alertLogin": "चुकीचे वापरकर्तानाव किंवा पासवर्ड!",
+        "modalTitle": "🎫 डिजिटल प्रवेश पास", "btnViewGatePass": "🎫 प्रवेश पास पहा", "btnClose": "बंद करा",
+        "btnVoice": "🎙️ बोलून भरा (Voice AI)", "geoBtn": "📍 जलद लेन अनलॉक करा (GPS)", "shareDriverBtn": "📲 चालकाला पास पाठवा", "lblQr": "प्रवेशद्वारावर स्कॅन करा", 
+        "fltAllCerts": "सर्व यार्ड", "optPendingStatus": "प्रलंबित मान्यता", "optApprovedStatus": "मंजूर झालेले", "optAllStatus": "सर्व स्थिती",
+        "statPending": "प्रलंबित ट्रक", "statApproved": "मंजूर ट्रक", "statTotalQtl": "एकूण वजन (किलो)", "statPayout": "एकूण देयक (₹)", "lblEstPayout": "अंदाजे देयक:",
+        "btnBhavBoard": "📈 दैनिक भाव फलक (दर)", "btnSafety": "⚠️ कामगार सुरक्षा मार्गदर्शक",
+        "bhavTitle": "📈 दैनिक ई-कचरा दर", "bhavSubtitle": "अधिकृत सरकारी आणि पुनर्वापरकर्ता दर",
+        "thMaterial": "साहित्य", "thRate": "दर/किलो", "thTrend": "कल", "btnAudioRates": "🔊 दर ऐका (ऑडिओ)",
+        "safetyTitle": "⚠️ धोका आणि सुरक्षा नियम", "safetySubtitle": "ई-कचरा नियम २०२२ अंतर्गत अनिवार्य सुरक्षा नियम",
+        "safe1Head": "केबल उघड्यावर जाळू नका", "safe1Desc": "तारा जाळल्याने विषारी वायू बाहेर पडतो आणि तांब्याची गुणवत्ता खराब होते. अखंड तारा यार्डमध्ये जमा करा.",
+        "safe2Head": "पीसीबीवर अ‍ॅसिड प्रक्रिया करू नका", "safe2Desc": "अ‍ॅसिडने सोने काढल्यास विषबाधा होऊ शकते. अधिकृत कारखाने ९८% सुरक्षितपणे धातू वेगळे करतात.",
+        "safe3Head": "बॅटरी सुरक्षितपणे हाताळा", "safe3Desc": "लिथियम बॅटरी कधीही फोडू नका. आग टाळण्यासाठी ती उन्हापासून दूर थंड आणि कोरड्या जागी ठेवा.",
+        "btnAudioSafety": "🔊 सुरक्षा नियम ऐका (ऑडिओ)",
+        "optPcb": "पीसीबी / सर्किट बोर्ड", "optBattery": "लिथियम-आयन बॅटरी", "optCable": "तांब्याच्या तारा", "optDisplay": "डिस्प्ले युनिट्स", "optPlastic": "ई-प्लास्टिक",
+        "optMetal": "लोखंड", "optPaper": "कागद", "optGlass": "काच"
+      }
+    };
+
+    function toggleLanguage() {
+      if (currentLang === 'en') { currentLang = 'hi'; document.getElementById('langBtn').innerText = "🌐 मराठी"; }
+      else if (currentLang === 'hi') { currentLang = 'mr'; document.getElementById('langBtn').innerText = "🌐 English"; }
+      else { currentLang = 'en'; document.getElementById('langBtn').innerText = "🌐 हिन्दी"; }
+
+      var elements = document.querySelectorAll("[data-i18n]");
+      for (var i = 0; i < elements.length; i++) {
+        var key = elements[i].getAttribute("data-i18n");
+        if (textDict[currentLang][key]) { elements[i].innerText = textDict[currentLang][key]; }
+      }
+      if(currentLang === 'hi'){ document.getElementById('name').placeholder = "पूरा नाम"; document.getElementById('chatInput').placeholder = "यहाँ टाइप करें..."; } 
+      else if(currentLang === 'mr'){ document.getElementById('name').placeholder = "पूर्ण नाव"; document.getElementById('chatInput').placeholder = "येथे टाइप करा..."; }
+      else { document.getElementById('name').placeholder = "Full name"; document.getElementById('chatInput').placeholder = "Type here..."; }
+    }
+
+    function showScreen(screenId) {
+      var screens = ['roleScreen', 'farmerAuthScreen', 'farmerMenuScreen', 'farmerProfileScreen', 'loginScreen', 'adminScreen', 'farmerScreen', 'chatScreen'];
+      for(var i=0; i<screens.length; i++) { document.getElementById(screens[i]).classList.add('hidden'); }
+      var target = document.getElementById(screenId);
+      target.classList.remove('hidden');
+      if (['roleScreen', 'farmerAuthScreen', 'farmerMenuScreen', 'chatScreen'].includes(screenId)) { target.style.display = 'flex'; }
+    }
+
+    function openBhavBoard() { document.getElementById('bhavModal').classList.remove('hidden'); }
+    function openSafetyModal() { document.getElementById('safetyModal').classList.remove('hidden'); }
+
+    // Removed the search for premium voices. Defaults to the standard browser OS voice.
+    function speakSafety() {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        var textToSpeak = "";
+        var langCode = 'en-IN';
+        if (currentLang === 'mr') {
+          langCode = 'mr-IN';
+          textToSpeak = "सुरक्षा नियम. नियम एक: केबल उघड्यावर जाळू नका. नियम दोन: सर्किट बोर्डवर अ‍‍ॅसिड वापरू नका. नियम तीन: लिथियम बॅटरी सुरक्षित आणि कोरड्या जागी ठेवा.";
+        } else if (currentLang === 'hi') {
+          langCode = 'hi-IN';
+          textToSpeak = "सुरक्षा निर्देश. पहला: खुले में केबल न जलाएं. दूसरा: पीसीबी पर एसिड का प्रयोग न करें। तीसरा: बैटरी को सुरक्षित व सूखी जगह पर रखें।";
+        } else {
+          langCode = 'en-IN';
+          textToSpeak = "Safety Guidelines. One: Do not burn cables in open air. Two: Do not use acid leaching on circuit boards. Three: Store lithium batteries in a cool, dry place away from heat.";
+        }
+        var msg = new SpeechSynthesisUtterance(textToSpeak);
+        msg.lang = langCode;
+        msg.rate = 0.9;
+        window.speechSynthesis.speak(msg);
+      } else {
+        alert("Audio speech is not supported in this browser.");
+      }
+    }
+
+    function speakBhav() {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        var textToSpeak = "";
+        var langCode = 'en-IN';
+        if (currentLang === 'mr') {
+          langCode = 'mr-IN';
+          textToSpeak = "आजचे अधिकृत ई-कचरा दर. पीसीबी दोनशे पन्नास रुपये प्रति किलो. लिथियम बॅटरी एकशे वीस रुपये. तांब्याची केबल एकशे ऐंशी रुपये. डिस्प्ले युनिट्स तीस रुपये. ई-प्लास्टिक पंधरा रुपये प्रति किलो. लोखंड तीस रुपये. कागद दहा रुपये. काच पाच रुपये.";
+        } else if (currentLang === 'hi') {
+          langCode = 'hi-IN';
+          textToSpeak = "आज के अधिकृत ई-कचरा दर. पीसीबी दो सौ पचास रुपये प्रति किलो. लिथियम बैटरी एक सौ बीस रुपये. तांबे की केबल एक सौ अस्सी रुपये. डिस्प्ले स्क्रीन तीस रुपये. ई-प्लास्टिक पंद्रह रुपये प्रति किलो. लोहा तीस रुपये. कागज दस रुपये. कांच पांच रुपये.";
+        } else {
+          langCode = 'en-IN';
+          textToSpeak = "Today's benchmark e-waste rates. Circuit boards 250 rupees per kilo. Lithium batteries 120. Copper cables 180. Displays 30. E-plastics 15. Ferrous Metal 30. Paper 10. Glass 5 rupees.";
+        }
+        var msg = new SpeechSynthesisUtterance(textToSpeak);
+        msg.lang = langCode;
+        msg.rate = 0.9;
+        window.speechSynthesis.speak(msg);
+      } else {
+        alert("Audio speech is not supported in this browser.");
+      }
+    }
+
+    function closeModalAudio(modalId) {
+        window.speechSynthesis.cancel();
+        document.getElementById(modalId).classList.add('hidden');
+    }
+
+    function checkHoliday(inputId, warningId) {
+      var dateVal = document.getElementById(inputId).value;
+      var warnDiv = document.getElementById(warningId);
+      if (holidays[dateVal]) {
+        warnDiv.innerText = "⚠️ Holiday: " + (holidays[dateVal][currentLang] || holidays[dateVal]['en']);
+        warnDiv.style.display = "block";
+      } else { warnDiv.style.display = "none"; }
+    }
+
+    function sendOtp() {
+      var phone = document.getElementById('authPhone').value.trim();
+      if(phone.length !== 10) return alert(currentLang === 'hi' ? "कृपया 10 अंकों का मोबाइल नंबर दर्ज करें।" : (currentLang === 'mr' ? "कृपया १० अंकी मोबाईल नंबर प्रविष्ट करा." : "Please enter a 10-digit mobile number."));
+      document.getElementById('btnGetOtp').innerText = currentLang === 'hi' ? "OTP भेजा गया!" : (currentLang === 'mr' ? "OTP पाठवला!" : "OTP Sent!");
+      document.getElementById('otpSection').classList.remove('hidden');
+      setTimeout(function(){ alert("Demo TEST OTP: 1234"); }, 500);
+    }
+
+    function verifyOtp() {
+      var otp = document.getElementById('authOtp').value.trim();
+      if(otp !== "1234") return alert(currentLang === 'hi' ? "गलत OTP" : (currentLang === 'mr' ? "चुकीचा OTP" : "Invalid OTP"));
+      var phone = document.getElementById('authPhone').value.trim();
+      document.getElementById("phone").value = phone; 
+      
+      var savedPhone = localStorage.getItem("aarambh_phone");
+      var savedKhasra = localStorage.getItem("aarambh_khasra");
+      
+      if (savedKhasra === "12" || String(localStorage.getItem("aarambh_rakba")).includes(".")) {
+          localStorage.removeItem("aarambh_name");
+          localStorage.removeItem("aarambh_khasra");
+          localStorage.removeItem("aarambh_rakba");
+      }
+
+      if (savedPhone === phone && localStorage.getItem("aarambh_name")) {
+        document.getElementById("name").value = localStorage.getItem("aarambh_name") || "";
+        document.getElementById("khasra").value = localStorage.getItem("aarambh_khasra") || "";
+        document.getElementById("rakba").value = localStorage.getItem("aarambh_rakba") || "";
+        document.getElementById("welcomeBack").style.display = "block";
+        document.getElementById("welcomeBack").innerHTML = currentLang === 'hi' ? "<strong>वापसी पर स्वागत है!</strong> डेटा लोड किया गया।" : (currentLang === 'mr' ? "<strong>पुन्हा स्वागत आहे!</strong> डेटा लोड केला." : "<strong>Welcome back!</strong> Data loaded.");
+      } else {
+        document.getElementById("name").value = ""; document.getElementById("khasra").value = ""; document.getElementById("rakba").value = "";
+        document.getElementById("welcomeBack").style.display = "none";
+        resetBhuiyan();
+        localStorage.setItem("aarambh_phone", phone);
+      }
+      showScreen('farmerMenuScreen');
+    }
+
+    function cleanVehicleInput() {
+      var k = document.getElementById('khasra');
+      k.value = k.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+    }
+
+    function toggleWeightInput(checkbox) {
+      var inputId = checkbox.getAttribute('data-inputid');
+      var inputField = document.getElementById(inputId);
+      if(checkbox.checked) {
+        inputField.style.display = 'inline-block';
+        inputField.focus();
+      } else {
+        inputField.style.display = 'none';
+        inputField.value = '';
+      }
+      calculateTotalWeight();
+    }
+
+    function calculateTotalWeight() {
+      var total = 0;
+      var totalPayout = 0;
+      
+      var inputs = [
+        { id: 'w_pcb', rate: scrapRates["PCB"] },
+        { id: 'w_battery', rate: scrapRates["Batter"] },
+        { id: 'w_cable', rate: scrapRates["Cable"] },
+        { id: 'w_display', rate: scrapRates["Display"] },
+        { id: 'w_plastic', rate: scrapRates["Plastic"] },
+        { id: 'w_metal', rate: scrapRates["Ferrous"] },
+        { id: 'w_paper', rate: scrapRates["Paper"] },
+        { id: 'w_glass', rate: scrapRates["Glass"] }
+      ];
+
+      inputs.forEach(function(item) {
+        var el = document.getElementById(item.id);
+        if(el && el.style.display === 'inline-block' && el.value) {
+          var wt = parseFloat(el.value);
+          total += wt;
+          totalPayout += wt * item.rate;
+        }
+      });
+
+      document.getElementById('totalWeightDisplay').innerText = total;
+      document.getElementById('totalPayoutDisplay').innerText = totalPayout.toLocaleString('en-IN');
+      document.getElementById('weight').value = total;
+    }
+
+    function startVoiceRecognition() {
+      var btn = document.getElementById('voiceBtn');
+      var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) { alert("Voice AI not supported in this browser."); return; }
+      var recognition = new SpeechRecognition();
+      recognition.lang = currentLang === 'mr' ? 'mr-IN' : (currentLang === 'hi' ? 'hi-IN' : 'en-IN');
+      btn.innerText = "🔴 Listening... (Say: ID, Weight, Category)";
+      
+      try { recognition.start(); } catch(e) { alert("Microphone is blocked."); btn.innerText = textDict[currentLang]['btnVoice']; }
+
+      recognition.onresult = function(event) {
+          var text = event.results[0][0].transcript;
+          btn.innerText = textDict[currentLang]['btnVoice'];
+          
+          var numbers = text.match(/\d+/g);
+          if (numbers && numbers.length >= 1) { document.getElementById('rakba').value = numbers[0]; resetBhuiyan(); }
+          
+          var tLower = text.toLowerCase();
+          var checkboxes = document.querySelectorAll('#scrapCheckboxes input[type="checkbox"]');
+          
+          var weightAssigned = false;
+          if(tLower.includes('pcb') || tLower.includes('circuit') || text.includes('सर्किट')) { checkboxes[0].checked = true; toggleWeightInput(checkboxes[0]); if(numbers && numbers.length >= 2 && !weightAssigned) { document.getElementById('w_pcb').value = numbers[1]; weightAssigned = true; } }
+          if(tLower.includes('battery') || text.includes('बैटरी') || text.includes('बॅटरी')) { checkboxes[1].checked = true; toggleWeightInput(checkboxes[1]); if(numbers && numbers.length >= 2 && !weightAssigned) { document.getElementById('w_battery').value = numbers[1]; weightAssigned = true; } }
+          if(tLower.includes('cable') || tLower.includes('wire') || text.includes('तार') || text.includes('केबल')) { checkboxes[2].checked = true; toggleWeightInput(checkboxes[2]); if(numbers && numbers.length >= 2 && !weightAssigned) { document.getElementById('w_cable').value = numbers[1]; weightAssigned = true; } }
+          if(tLower.includes('display') || tLower.includes('screen') || text.includes('स्क्रीन')) { checkboxes[3].checked = true; toggleWeightInput(checkboxes[3]); if(numbers && numbers.length >= 2 && !weightAssigned) { document.getElementById('w_display').value = numbers[1]; weightAssigned = true; } }
+          if(tLower.includes('plastic') || text.includes('प्लास्टिक')) { checkboxes[4].checked = true; toggleWeightInput(checkboxes[4]); if(numbers && numbers.length >= 2 && !weightAssigned) { document.getElementById('w_plastic').value = numbers[1]; weightAssigned = true; } }
+          if(tLower.includes('metal') || text.includes('लोहा')) { checkboxes[5].checked = true; toggleWeightInput(checkboxes[5]); if(numbers && numbers.length >= 2 && !weightAssigned) { document.getElementById('w_metal').value = numbers[1]; weightAssigned = true; } }
+          if(tLower.includes('paper') || text.includes('कागज') || text.includes('कागद')) { checkboxes[6].checked = true; toggleWeightInput(checkboxes[6]); if(numbers && numbers.length >= 2 && !weightAssigned) { document.getElementById('w_paper').value = numbers[1]; weightAssigned = true; } }
+          if(tLower.includes('glass') || text.includes('कांच') || text.includes('काच')) { checkboxes[7].checked = true; toggleWeightInput(checkboxes[7]); if(numbers && numbers.length >= 2 && !weightAssigned) { document.getElementById('w_glass').value = numbers[1]; weightAssigned = true; } }
+          
+          calculateTotalWeight();
+          alert("Heard: " + text + "\nFields updated!");
+      };
+      recognition.onerror = function(event) { alert("Voice AI Error: " + event.error); btn.innerText = textDict[currentLang]['btnVoice']; };
+    }
+
+    var mandiCoords = { "Bilaspur Scrap Yard": { lat: 22.06, lng: 82.12 }, "Raipur Scrap Yard": { lat: 21.25, lng: 81.62 }, "Bhilai Scrap Yard": { lat: 21.19, lng: 81.35 }, "Korba Scrap Yard": { lat: 22.35, lng: 82.68 } };
+    function haversineDist(lat1, lon1, lat2, lon2) {
+      var p = Math.PI / 180; var a = 0.5 - Math.cos((lat2 - lat1) * p)/2 + Math.cos(lat1 * p) * Math.cos(lat2 * p) * (1 - Math.cos((lon2 - lon1) * p))/2;
+      return 2 * 6371 * Math.asin(Math.sqrt(a));
+    }
+
+    function findBestMandi() {
+      var selectedDate = document.getElementById('prefDate').value;
+      if(!selectedDate) return alert(currentLang === 'hi' ? "कृपया पहले अपनी डिलीवरी तिथि चुनें।" : (currentLang === 'mr' ? "कृपया आधी तारीख निवडा." : "Please select your Preferred Delivery Date first."));
+
+      var btn = document.getElementById('btnBestMandi'); var warnDiv = document.getElementById('loadWarning');
+      btn.innerText = "Calculating routes & queues...";
+      
+      fetch(webAppUrl + "?action=getLoad&date=" + selectedDate).then(res => res.json()).then(loadData => {
+         if(navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(pos) {
+               var userLat = pos.coords.latitude; var userLng = pos.coords.longitude;
+               var bestMandi = ""; var lowestTotalTime = 999999;
+               
+               for(var mandi in mandiCoords) {
+                  var dist = haversineDist(userLat, userLng, mandiCoords[mandi].lat, mandiCoords[mandi].lng);
+                  var travelTimeMins = (dist / 30) * 60; 
+                  var queueTimeMins = (loadData[mandi] || 0) * 15;
+                  var totalTime = travelTimeMins + queueTimeMins;
+                  if(totalTime < lowestTotalTime) { lowestTotalTime = totalTime; bestMandi = mandi; }
+               }
+               
+               document.getElementById('center').value = bestMandi;
+               warnDiv.innerHTML = "✅ <b>Smart Route:</b> " + bestMandi + " (" + selectedDate + ") has the fastest combined transit and queue time.";
+               warnDiv.style.display = "block";
+               btn.innerText = textDict[currentLang]['btnBestMandi'];
+            }, function(err) { alert("GPS Denied."); btn.innerText = textDict[currentLang]['btnBestMandi']; });
+         }
+      }).catch(e => { btn.innerText = "Error"; });
+    }
+
+    function resetBhuiyan() {
+      var btn = document.getElementById('btnBhuiyan'); btn.style.display = 'inline-block'; btn.disabled = false;
+      btn.innerText = textDict[currentLang]['btnVerifyBhuiyan'];
+      var verifiedDiv = document.getElementById('bhuiyanVerified');
+      verifiedDiv.style.display = 'none'; 
+      verifiedDiv.className = 'bhuiyan-verified';
+      
+      document.getElementById('name').value = ""; 
+      document.getElementById('khasra').value = "";
+      
+      document.getElementById('name').disabled = false;
+      document.getElementById('name').style.background = "#fff";
+    }
+
+    function simulateBhuiyanAPI() {
+      var rakbaVal = document.getElementById('rakba').value.trim();
+      var btn = document.getElementById('btnBhuiyan');
+      var verifiedDiv = document.getElementById('bhuiyanVerified');
+      
+      if(!rakbaVal) return alert(currentLang === 'hi' ? "कृपया पहले आईडी दर्ज करें।" : (currentLang === 'mr' ? "कृपया आधी आयडी प्रविष्ट करा." : "Please enter Collector ID first."));
+      
+      var verifyMsg = "";
+      var isFormal = false;
+      
+      if (rakbaVal.length === 12) {
+          verifyMsg = currentLang === 'hi' ? "✅ ई-श्रम सत्यापित (औपचारिक संकलक)" : (currentLang === 'mr' ? "✅ ई-श्रम सत्यापित (अधिकृत संकलक)" : "✅ e-Shram Verified (Formal Collector)");
+          verifiedDiv.className = "bhuiyan-verified formal";
+          isFormal = true;
+      } else if (rakbaVal.length === 4) {
+          verifyMsg = currentLang === 'hi' ? "⚠️ आधार सत्यापित (अस्थायी पास)" : (currentLang === 'mr' ? "⚠️ आधार सत्यापित (तात्पुरता पास)" : "⚠️ Aadhaar Verified (Provisional Pass)");
+          verifiedDiv.className = "bhuiyan-verified provisional";
+          isFormal = false;
+      } else {
+          return alert(currentLang === 'hi' ? "कृपया 12-अंकीय ई-श्रम या 4-अंकीय आधार दर्ज करें।" : (currentLang === 'mr' ? "कृपया १२-अंकी ई-श्रम किंवा ४-अंकी आधार प्रविष्ट करा." : "Please enter a 12-digit e-Shram ID or 4-digit Aadhaar ending."));
+      }
+
+      btn.innerText = "Verifying..."; btn.disabled = true;
+      
+      setTimeout(function() {
+        if(isFormal) {
+            document.getElementById('name').value = "Annantjeet Singh"; 
+            document.getElementById('name').disabled = true;
+            document.getElementById('name').style.background = "#eef2f7";
+            document.getElementById('khasra').value = "CG10AB1234";
+        } else {
+            document.getElementById('name').value = ""; 
+            document.getElementById('name').disabled = false;
+            document.getElementById('name').style.background = "#fff";
+            document.getElementById('khasra').value = "";
+        }
+        
+        btn.style.display = 'none'; 
+        verifiedDiv.innerText = verifyMsg;
+        verifiedDiv.style.display = 'block';
+      }, 1500);
+    }
+
+    function showGatePass(index) {
+      var row = globalFarmerData[index];
+      
+      document.getElementById('gpName').innerText = row[0];
+      document.getElementById('gpCenter').innerText = row[6] || "Bilaspur Scrap Yard";
+      
+      var rawScrapStr = row[4];
+      var scrapText = String(rawScrapStr).replace(/,/g, "<br>");
+      document.getElementById('gpCrop').innerHTML = scrapText;
+      document.getElementById('gpWeight').innerText = row[5];
+      
+      var payout = getEstimatedValue(rawScrapStr, row[5]);
+      document.getElementById('gpPayout').innerText = "₹" + payout.toLocaleString('en-IN');
+      
+      document.getElementById('gpSlot').innerText = row[9];
+      document.getElementById('gpDateVal').innerText = row[7] ? String(row[7]).split('T')[0] : "";
+      
+      document.getElementById('gpToken').innerText = "KC-" + Math.floor(1000 + Math.random() * 9000);
+      document.getElementById('gpBridge').innerText = "Bay 0" + Math.floor(1 + Math.random() * 4);
+
+      document.getElementById('gatePassStatus').innerHTML = "🔒 IN-TRANSIT (Awaiting GPS)";
+      document.getElementById('gatePassStatus').style.color = "#7f8c8d";
+      document.getElementById('geoBtn').style.display = "block";
+      document.getElementById('geoBtn').innerText = textDict[currentLang]['geoBtn'];
+      document.getElementById('qrFallback').classList.add('hidden');
+      document.getElementById('gatePassModal').classList.remove('hidden');
+    }
+
+    // FIX 2: Filter Collector History Dropdown
+    function renderCollectorHistory() {
+      var container = document.getElementById('farmerHistoryData');
+      var statusFilter = document.getElementById('collectorStatusFilter').value;
+      var htmlStr = "";
+      var matchCount = 0;
+
+      for (var i = 0; i < globalFarmerData.length; i++) {
+        var row = globalFarmerData[i];
+        var status = row[10] || "Pending";
+        
+        // Filter Logic
+        if (statusFilter !== "All" && status !== statusFilter) continue;
+        matchCount++;
+
+        var dateDisplay = row[7] ? String(row[7]).split('T')[0] : "";
+        var sheetRowNum = row[11]; 
+        var rawScrapStr = row[4];
+        
+        var statusDisplay = status;
+        if(currentLang === 'hi') {
+            if(status === 'Pending') statusDisplay = "लंबित";
+            if(status === 'Approved') statusDisplay = "स्वीकृत";
+            if(status === 'Rejected') statusDisplay = "अस्वीकृत";
+            if(status === 'Cancelled') statusDisplay = "रद्द";
+        } else if(currentLang === 'mr') {
+            if(status === 'Pending') statusDisplay = "प्रलंबित";
+            if(status === 'Approved') statusDisplay = "मंजूर";
+            if(status === 'Rejected') statusDisplay = "नाकारले";
+            if(status === 'Cancelled') statusDisplay = "रद्द";
+        }
+
+        var payout = getEstimatedValue(rawScrapStr, row[5]);
+        var payoutLabel = textDict[currentLang]['lblEstPayout'];
+        var badgeColor = status === 'Approved' ? '#27ae60' : (status === 'Rejected' || status === 'Cancelled' ? '#e74c3c' : '#f39c12');
+        var gatePassBtn = '';
+        
+        if(status === 'Approved') {
+            gatePassBtn = "<button class='gatepass-btn' onclick='showGatePass(" + i + ")'>" + textDict[currentLang]['btnViewGatePass'] + "</button>";
+        }
+
+        htmlStr += "<div class='card'>" +
+            "<p><strong>Yard:</strong> " + (row[6] || "N/A") + "</p>" +
+            "<p><strong>Vehicle:</strong> " + row[2] + " | <strong>ID:</strong> " + row[3] + "</p>" +
+            "<p><strong>Breakdown:</strong> " + rawScrapStr + " <br><strong>Total Weight:</strong> " + row[5] + " Kg</p>" +
+            "<p><strong>" + payoutLabel + "</strong> <span style='color:#27ae60; font-weight:bold;'>₹" + payout.toLocaleString('en-IN') + "</span></p>" +
+            "<p><strong>Date:</strong> " + dateDisplay + "</p>" +
+            "<p><strong>Status:</strong> <span class='status-badge' style='background:" + badgeColor + "'>" + statusDisplay + "</span></p>" +
+            gatePassBtn;
+        
+        if(status === 'Pending') {
+            htmlStr += "<button class='cancel-btn' onclick=\"cancelToken(" + sheetRowNum + ")\">Cancel</button>";
+        }
+        htmlStr += "</div>";
+      }
+
+      if(matchCount === 0) {
+        container.innerHTML = "<p>No records found for this status.</p>";
+      } else {
+        container.innerHTML = htmlStr;
+      }
+    }
+
+    function loadFarmerProfile() {
+      showScreen('farmerProfileScreen');
+      var container = document.getElementById('farmerHistoryData');
+      container.innerHTML = "Fetching history...";
+      var phone = document.getElementById('authPhone').value.trim();
+      
+      fetch(webAppUrl + "?action=getProfile&phone=" + phone)
+        .then(res => res.json())
+        .then(data => {
+          globalFarmerData = data; 
+          document.getElementById('collectorStatusFilter').value = "All"; // Reset filter
+          renderCollectorHistory(); // Call the render function
+        });
+    }
+
+    function verifyGeofence() {
+      var btn = document.getElementById('geoBtn'); btn.innerText = "Checking GPS...";
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(pos) {
+            document.getElementById('gatePassStatus').innerHTML = "✅ FAST-LANE UNLOCKED";
+            document.getElementById('gatePassStatus').style.color = "#27ae60";
+            btn.style.display = "none";
+        }, function(err) {
+            btn.innerText = "📍 GPS Failed - Use QR Code";
+            document.getElementById('qrFallback').classList.remove('hidden');
+        });
+      }
+    }
+
+    function shareToDriver() {
+      var txt = "🎫 Kabadiwala Entry Pass\nYard: " + document.getElementById('gpCenter').innerText + "\nTime: " + document.getElementById('gpSlot').innerText;
+      if (navigator.share) { navigator.share({ title: 'Gate Pass', text: txt }).catch(console.error); } 
+      else { window.open("https://wa.me/?text=" + encodeURIComponent(txt), "_blank"); }
+    }
+
+    function cancelToken(rowNum) {
+      if (!confirm("Cancel request?")) return;
+      document.getElementById('farmerHistoryData').innerHTML = "Cancelling...";
+      fetch(webAppUrl, { method: "POST", body: JSON.stringify({ action: "cancel", row: rowNum, apiKey: SECRET_API_KEY }), mode: "no-cors" }).then(() => loadFarmerProfile());
+    }
+function openWhatsApp() {
+      var txt = "Namaste Kabadiwala Connect! I want to book a drop-off.\n\nName: \nPhone: \nVehicle No: \nID: \nYard: \nMaterials: PCBs/Batteries/Cables\nWeight (Kg): \nPref Date: \nPref Slot: Morning/Afternoon";
+      window.open("https://wa.me/917224821908?text=" + encodeURIComponent(txt), "_blank");
+    }
+
+    function submitData() {
+      var name = document.getElementById('name').value; 
+      var phone = document.getElementById('phone').value;
+      cleanVehicleInput(); 
+      var khasra = document.getElementById('khasra').value; 
+      var rakba = document.getElementById('rakba').value;
+      var center = document.getElementById('center').value; 
+      var weight = document.getElementById('weight').value; 
+      var prefDate = document.getElementById('prefDate').value;
+      var prefSlot = document.getElementById('prefSlot').value; 
+      var btn = document.getElementById('submitBtn');
+
+      var selectedCrops = [];
+      var checkboxes = document.querySelectorAll('#scrapCheckboxes input[type="checkbox"]:checked');
+      for (var i = 0; i < checkboxes.length; i++) {
+        var inputId = checkboxes[i].getAttribute('data-inputid');
+        var specificWeight = document.getElementById(inputId).value || 0;
+        selectedCrops.push(checkboxes[i].value + " (" + specificWeight + "kg)");
+      }
+      var crop = selectedCrops.join(", "); 
+
+      if (!name || !phone || !khasra || !rakba || !center || weight <= 0 || !prefDate || selectedCrops.length === 0) { 
+        return alert("Please fill all details, select materials, and ensure weight is greater than 0."); 
+      }
+      
+      btn.disabled = true; btn.innerText = "Processing...";
+      fetch(webAppUrl, { 
+        method: "POST", 
+        body: JSON.stringify({ action: "create", apiKey: SECRET_API_KEY, name: name, phone: phone, khasra: khasra, rakba: rakba, center: center, crop: crop, weight: weight, prefDate: prefDate, prefSlot: prefSlot }), 
+        mode: "no-cors" 
+      }).then(function() {
+        alert("Success!"); btn.disabled = false; btn.innerText = textDict[currentLang]["btnSubmit"]; showScreen('farmerMenuScreen');
+      });
+    }
+
+    var chatStep = 0;
+    var farmerData = { action: "create", apiKey: SECRET_API_KEY, name: "", phone: "", khasra: "", rakba: "", center: "Bilaspur Scrap Yard", crop: "PCBs", weight: "", prefDate: "", prefSlot: "Morning" };
+    var isFormalUser = false;
+
+    function startChat() {
+      showScreen('chatScreen'); document.getElementById('chatWindow').innerHTML = ''; chatStep = 0;
+      farmerData = { action: "create", apiKey: SECRET_API_KEY, name: "", phone: "", khasra: "", rakba: "", center: "Bilaspur Scrap Yard", crop: "PCBs", weight: "", prefDate: "", prefSlot: "Morning" };
+      isFormalUser = false;
+      document.getElementById('chatInput').disabled = false; document.getElementById('chatSendBtn').disabled = false;
+      farmerData.phone = document.getElementById('authPhone').value; 
+      
+      addBotMsg(currentLang === 'hi' ? "♻️ नमस्ते! आपका ई-श्रम या आधार नंबर क्या है?" : (currentLang === 'mr' ? "♻️ नमस्कार! तुमचा ई-श्रम किंवा आधार नंबर काय आहे?" : "♻️ Namaste! What is your e-Shram or Aadhaar number?"));
+    }
+
+    function addBotMsg(text) { var cw = document.getElementById('chatWindow'); cw.innerHTML += "<div class='msg bot'>" + text + "</div>"; cw.scrollTop = cw.scrollHeight; }
+    function addUserMsg(text) { var cw = document.getElementById('chatWindow'); cw.innerHTML += "<div class='msg user'>" + text + "</div>"; cw.scrollTop = cw.scrollHeight; document.getElementById('chatInput').value = ''; }
+    function handleEnter(e) { if (e.key === "Enter") processUserReply(); }
+
+    function processUserReply() {
+      var inputField = document.getElementById('chatInput');
+      var text = inputField.value.trim();
+      if (!text) return;
+      addUserMsg(text);
+
+      if (chatStep === 0) {
+        var idNum = text.replace(/[^0-9]/g, '');
+        farmerData.rakba = idNum;
+        
+        if(idNum.length === 12) {
+            isFormalUser = true;
+            farmerData.name = "Annantjeet Singh"; 
+            farmerData.khasra = "CG10AB1234";    
+            chatStep = 3; 
+            setTimeout(function() { addBotMsg("✅ e-Shram Verified. " + (currentLang === 'hi' ? "आप कौन सा ई-कचरा ला रहे हैं? (पीसीबी/बैटरी/केबल)" : "What e-waste are you bringing? (PCBs/Batteries/Cables)")); }, 600);
+        } else {
+            isFormalUser = false;
+            chatStep = 1;
+            setTimeout(function() { addBotMsg(currentLang === 'hi' ? "आपकी गाड़ी का नंबर क्या है?" : "What is your Vehicle Number?"); }, 600);
+        }
+      }
+      else if (chatStep === 1) {
+        farmerData.khasra = text.replace(/[^a-zA-Z0-9]/g, '').toUpperCase(); chatStep++;
+        setTimeout(function() { addBotMsg(currentLang === 'hi' ? "आपका पूरा नाम क्या है?" : "What is your Full Name?"); }, 600);
+      }
+      else if (chatStep === 2) {
+        farmerData.name = text; chatStep++;
+        setTimeout(function() { addBotMsg(currentLang === 'hi' ? "आप कौन सा ई-कचरा ला रहे हैं? (पीसीबी/बैटरी/केबल)" : "What e-waste are you bringing? (PCBs/Batteries/Cables)"); }, 600);
+      }
+      else if (chatStep === 3) {
+        farmerData.crop = text; chatStep++;
+        setTimeout(function() { addBotMsg(currentLang === 'hi' ? "कितने किलो वजन है?" : "How many Kgs?"); }, 600);
+      } 
+      else if (chatStep === 4) {
+        farmerData.weight = text; chatStep++;
+        inputField.type = "date"; 
+        setTimeout(function() { addBotMsg(currentLang === 'hi' ? "डिलीवरी की तारीख चुनें?" : "Preferred drop-off date?"); }, 600);
+      }
+      else if (chatStep === 5) {
+        farmerData.prefDate = text;
+        chatStep++; inputField.type = "text"; 
+        setTimeout(function() { addBotMsg(currentLang === 'hi' ? "समय: सुबह या दोपहर?" : "Preferred slot: Morning or Afternoon?"); }, 600);
+      } 
+      else if (chatStep === 6) {
+        farmerData.prefSlot = text;
+        inputField.disabled = true; document.getElementById('chatSendBtn').disabled = true;
+        setTimeout(function() { addBotMsg("⏳ Processing GPS routing..."); }, 600);
+        
+        // FIX 1: Run Haversine to auto-assign the best Yard for Chatbot bookings
+        fetch(webAppUrl + "?action=getLoad&date=" + farmerData.prefDate).then(res => res.json()).then(loadData => {
+            if(navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(pos) {
+                    var userLat = pos.coords.latitude; var userLng = pos.coords.longitude;
+                    var bestMandi = ""; var lowestTotalTime = 999999;
+                    for(var mandi in mandiCoords) {
+                        var dist = haversineDist(userLat, userLng, mandiCoords[mandi].lat, mandiCoords[mandi].lng);
+                        var travelTimeMins = (dist / 30) * 60; var queueTimeMins = (loadData[mandi] || 0) * 15;
+                        var totalTime = travelTimeMins + queueTimeMins;
+                        if(totalTime < lowestTotalTime) { lowestTotalTime = totalTime; bestMandi = mandi; }
+                    }
+                    farmerData.center = bestMandi || "Bilaspur Scrap Yard";
+                    sendChatData();
+                }, function(err) { farmerData.center = "Bilaspur Scrap Yard"; sendChatData(); });
+            } else { farmerData.center = "Bilaspur Scrap Yard"; sendChatData(); }
+        }).catch(e => { farmerData.center = "Bilaspur Scrap Yard"; sendChatData(); });
+      }
+    }
+
+    function sendChatData() {
+        fetch(webAppUrl, { method: "POST", body: JSON.stringify(farmerData), mode: "no-cors" })
+        .then(function() { setTimeout(function() { addBotMsg("✅ Request Successful! Your scrap has been routed to " + farmerData.center + "."); }, 1000); });
+    }
+
+    function verifyLogin() {
+      var u = document.getElementById('adminUsername').value.trim();
+      var p = document.getElementById('adminPassword').value.trim();
+      var btn = document.getElementById('btnLogin');
+      btn.innerText = "Verifying..."; btn.disabled = true;
+      
+      fetch(webAppUrl + "?action=managerLogin&user=" + encodeURIComponent(u) + "&pass=" + encodeURIComponent(p))
+        .then(res => res.json())
+        .then(data => {
+            btn.innerText = "Secure Login"; btn.disabled = false;
+            if(data.auth) {
+                document.getElementById('adminUsername').value = ''; document.getElementById('adminPassword').value = ''; 
+                globalManagerData = data.records;
+                showScreen('adminScreen'); renderManagerData();
+            } else {
+                alert("Incorrect Username or Password!");
+            }
+        }).catch(err => { alert("Server error"); btn.innerText = "Secure Login"; btn.disabled = false; });
+    }
+
+    function loadData() {
+        document.getElementById('dashboardData').innerHTML = "Refreshing...";
+        fetch(webAppUrl + "?action=managerLogin&user=admin&pass=admin123")
+          .then(res => res.json())
+          .then(data => {
+             if(data.auth) { globalManagerData = data.records; renderManagerData(); }
+          });
+    }
+
+    function renderManagerData() {
+      var container = document.getElementById('dashboardData');
+      var dateFilter = document.getElementById('managerDateFilter').value;
+      var centerFilter = document.getElementById('managerCenterFilter').value;
+      var statusFilter = document.getElementById('managerStatusFilter').value;
+
+      var pendingCount = 0; var approvedCount = 0; var totalQtl = 0; var totalPayout = 0;
+      var htmlStr = "";
+      var data = globalManagerData;
+      
+      for (var i = 1; i < data.length; i++) {
+        var row = data[i];
+        var sheetRowNumber = i + 1; 
+        
+        var centerVal = row[6] || "N/A";
+        var rawScrapStr = row[4] || "";
+        var statusVal = row[10] || "Pending";
+        var dateDisplay = row[7] ? String(row[7]).split('T')[0] : "";
+        
+        if(centerFilter !== "All" && centerVal !== centerFilter) continue;
+        if(statusFilter !== "All" && statusVal !== statusFilter) continue;
+        if(dateFilter && dateDisplay !== dateFilter) continue;
+
+        var rowPayout = getEstimatedValue(rawScrapStr, row[5]);
+        
+        if(statusVal === 'Pending') pendingCount++;
+        if(statusVal === 'Approved') approvedCount++;
+        
+        totalQtl += parseFloat(row[5]) || 0;
+        totalPayout += rowPayout;
+        
+        var maskedKhasra = String(row[2]).length > 4 ? "XXXX-" + String(row[2]).slice(-4) : row[2];
+        var badgeColor = statusVal === 'Approved' ? '#27ae60' : (statusVal === 'Rejected' || statusVal === 'Cancelled' ? '#e74c3c' : '#f39c12');
+        var payoutLabel = textDict[currentLang]['lblEstPayout'];
+        
+        htmlStr += "<div class='card'>" +
+            "<p><strong>Yard:</strong> " + centerVal + "</p>" +
+            "<p><strong>Name:</strong> " + row[0] + " | <strong>Phone:</strong> " + row[1] + "</p>" +
+            "<p><strong>Materials:</strong> " + rawScrapStr + " <br><strong>Total Weight:</strong> " + row[5] + " Kg | <strong>Vehicle:</strong> <span class='privacy-mask'>" + maskedKhasra + "</span></p>" +
+            "<p><strong>" + payoutLabel + "</strong> <span style='color:#27ae60; font-weight:bold;'>₹" + rowPayout.toLocaleString('en-IN') + "</span></p>" +
+            "<p><strong>Requested:</strong> " + dateDisplay + "</p>" +
+            "<p><strong>Status:</strong> <span class='status-badge' style='background:" + badgeColor + "'>" + statusVal + "</span></p>";
+            
+        if (statusVal === 'Pending') {
+          var slotCounts = {"09:00 AM - 11:00 AM":0, "11:00 AM - 01:00 PM":0, "01:00 PM - 03:00 PM":0, "03:00 PM - 05:00 PM":0};
+          var tokensOnDate = 0;
+          var recommendedDate = dateDisplay;
+          
+          for(var j=1; j<data.length; j++){
+              if(data[j][10] === "Approved" && String(data[j][7]).split('T')[0] === recommendedDate && data[j][6] === centerVal) {
+                  tokensOnDate++;
+                  var assignedSlot = data[j][9];
+                  if(slotCounts[assignedSlot] !== undefined) slotCounts[assignedSlot]++;
+              }
+          }
+          
+          var dateWasShifted = false;
+          if(tokensOnDate >= 15) {
+             var d = new Date(recommendedDate); d.setDate(d.getDate() + 1);
+             recommendedDate = d.toISOString().split('T')[0]; dateWasShifted = true;
+             slotCounts = {"09:00 AM - 11:00 AM":0, "11:00 AM - 01:00 PM":0, "01:00 PM - 03:00 PM":0, "03:00 PM - 05:00 PM":0};
+          }
+
+          var bestSlot = "09:00 AM - 11:00 AM"; var minLoad = 9999;
+          for(var s in slotCounts) { if(slotCounts[s] < minLoad) { minLoad = slotCounts[s]; bestSlot = s; } }
+          
+          var smartBadgeTxt = dateWasShifted ? "✨ Date & Time Auto-Optimized" : "✨ Smart Time Suggestion";
+
+          htmlStr += "<div class='slot-picker'>" +
+                   "<label style='font-size:12px;'>Reschedule Date (If needed):</label>" +
+                   "<input type='date' id='dateSelect_" + sheetRowNumber + "' value='" + recommendedDate + "' style='margin-bottom:4px;'>" +
+                   "<span class='smart-badge'>" + smartBadgeTxt + "</span>" +
+                   "<select id='slotSelect_" + sheetRowNumber + "'>" +
+                     "<option value='09:00 AM - 11:00 AM' " + (bestSlot === '09:00 AM - 11:00 AM' ? 'selected' : '') + ">09:00 AM - 11:00 AM</option>" +
+                     "<option value='11:00 AM - 01:00 PM' " + (bestSlot === '11:00 AM - 01:00 PM' ? 'selected' : '') + ">11:00 AM - 01:00 PM</option>" +
+                     "<option value='01:00 PM - 03:00 PM' " + (bestSlot === '01:00 PM - 03:00 PM' ? 'selected' : '') + ">01:00 PM - 03:00 PM</option>" +
+                     "<option value='03:00 PM - 05:00 PM' " + (bestSlot === '03:00 PM - 05:00 PM' ? 'selected' : '') + ">03:00 PM - 05:00 PM</option>" +
+                   "</select>" +
+                   "<div class='action-row'>" +
+                     "<button type='button' class='btn-approve' onclick=\"processDecision(" + sheetRowNumber + ", '" + row[1] + "', 'Approved')\">Approve</button>" +
+                     "<button type='button' class='btn-reject' onclick=\"processDecision(" + sheetRowNumber + ", '" + row[1] + "', 'Rejected')\">Reject</button>" +
+                   "</div>" +
+                 "</div>";
+        }
+        htmlStr += "</div>";
+      }
+      container.innerHTML = htmlStr || "<p>No applications match these filters.</p>";
+      
+      document.getElementById('statPendingCount').innerText = pendingCount;
+      document.getElementById('statApprovedCount').innerText = approvedCount;
+      document.getElementById('statTotalQtlCount').innerText = totalQtl;
+      document.getElementById('statPayoutCount').innerText = totalPayout.toLocaleString('en-IN');
+    }
+
+    function processDecision(rowNum, phone, status) {
+      var slot = "N/A"; var newDate = "";
+      if (status === "Approved") {
+         slot = document.getElementById("slotSelect_" + rowNum).value;
+         newDate = document.getElementById("dateSelect_" + rowNum).value;
+      }
+      if (!confirm("Mark as " + status + "?")) return;
+      document.getElementById('dashboardData').innerHTML = "Updating securely...";
+      fetch(webAppUrl, { 
+        method: "POST", 
+        body: JSON.stringify({ action: "update", apiKey: SECRET_API_KEY, row: rowNum, phone: phone, status: status, slot: slot, newDate: newDate }), 
+        mode: "no-cors" 
+      }).then(function() { alert("Updated!"); loadData(); });
+    }
+
+    function exportCSV() {
+      if (!globalManagerData) { return; }
+      var csvContent = "data:text/csv;charset=utf-8,";
+      globalManagerData.forEach(function(rowArray) {
+          var row = rowArray.map(function(item) { var stringified = item ? String(item) : ""; return '"' + stringified.replace(/"/g, '""') + '"'; }).join(",");
+          csvContent += row + "\r\n";
+      });
+      var encodedUri = encodeURI(csvContent);
+      var link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "Connect_Yard_Report.csv");
+      document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    }
+  </script>
+</body>
+</html>
